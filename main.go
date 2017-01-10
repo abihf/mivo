@@ -35,11 +35,13 @@ func handleChannel(w http.ResponseWriter, r *http.Request) {
 
 	channel, err := mivo.GetChannel(int32(id))
 	if err != nil {
+  	http.Error(w, err.Error(), 500)
 		return
 	}
 
 	body, size, err := channel.FetchPlaylist()
 	if err != nil {
+	  http.Error(w, err.Error(), 500)
 		return
 	}
 	defer body.Close()
@@ -70,6 +72,7 @@ func handleEpg(w http.ResponseWriter, r *http.Request) {
 func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", handleIndex)
+	r.HandleFunc("/index.m3u", handleIndex)
 	r.HandleFunc("/epg.xml", handleEpg)
 	r.HandleFunc("/ch/{id:[0-9]+}.m3u8", handleChannel)
 	http.Handle("/", r)

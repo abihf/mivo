@@ -63,5 +63,6 @@ func GetSign() (string, error) {
 	dec := json.NewDecoder(resp.Body)
 	var auth wmsAuth
 	dec.Decode(&auth)
+	currentSignLastFetch = now
 	return auth.Sign, nil
 }
